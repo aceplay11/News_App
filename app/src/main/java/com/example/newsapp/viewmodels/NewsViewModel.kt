@@ -7,17 +7,24 @@ import com.example.newsapp.model.NewsResponse
 import com.example.newsapp.networking.NewsRepository
 
 class NewsViewModel : ViewModel() {
-    private var mutableLiveData: MutableLiveData<NewsResponse?>? = null
+    private var urlMutableLiveData: MutableLiveData<NewsResponse?>? = null
+    val urlLiveData: LiveData<NewsResponse?>?
+        get() = urlMutableLiveData
     var newsRepository: NewsRepository? = null
     fun init() {
-        if (mutableLiveData != null) {
+        if (urlLiveData != null) {
             return
         }
         newsRepository = NewsRepository.instance
-        mutableLiveData = newsRepository!!.getNews("us", "bb3f9d4541604888bbcf194129fb7c93")
+        urlMutableLiveData = newsRepository!!.getNews(source, apiKey )
     }
 
     fun getNewsRepository(): LiveData<NewsResponse?>? {
-        return mutableLiveData
+        return urlLiveData
+    }
+    companion object Constants{
+        val apiKey = "bb3f9d4541604888bbcf194129fb7c93"
+        val source = "us"
+
     }
 }

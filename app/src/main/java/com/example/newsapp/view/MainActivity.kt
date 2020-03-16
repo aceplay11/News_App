@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         if (newsAdapter == null) {
-            newsAdapter = NewsAdapter(this@MainActivity, articleArrayList)
+            newsAdapter = NewsAdapter( articleArrayList)
         }
         newsFeedView.layoutManager = LinearLayoutManager(this)
         newsFeedView.addItemDecoration(DividerItemDecoration(this,

@@ -16,10 +16,12 @@ import com.example.newsapp.model.NewsArticle
 import com.bumptech.glide.Glide
 import com.example.newsapp.R
 import java.util.*
+import kotlinx.android.synthetic.main.news_item.*
+import kotlinx.android.synthetic.main.news_item.view.*
 
-class NewsAdapter(var context: Context, var articles: ArrayList<NewsArticle?>) : RecyclerView.Adapter<NewsViewHolder>() {
+class NewsAdapter(var articles: ArrayList<NewsArticle?>) : RecyclerView.Adapter<NewsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.news_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.news_item, parent, false)
         return NewsViewHolder(view)
     }
 
@@ -35,21 +37,16 @@ class NewsAdapter(var context: Context, var articles: ArrayList<NewsArticle?>) :
     }
 
     inner class NewsViewHolder(itemView: View) : ViewHolder(itemView) {
-        var imageView: ImageView
-        var authorTextView : TextView
-        var titleTextView: TextView
-        var sourceTextView: TextView
+        val imageView: ImageView = itemView.imageView
+        var authorTextView : TextView = itemView.authorTextView
+        var titleTextView: TextView = itemView.titleTextView
+        var sourceTextView: TextView = itemView.sourceTextView
 
-        init {
-            imageView = itemView.findViewById(R.id.imageView)
-            authorTextView  = itemView.findViewById(R.id.authorTextView)
-            titleTextView = itemView.findViewById(R.id.titleTextView)
-            sourceTextView = itemView.findViewById(R.id.sourceTextView)
-            itemView.setOnClickListener {
-                var url = Intent(Intent.ACTION_VIEW, Uri.parse(sourceTextView.text.toString()))
-                startActivity(context, url, null)
+//            //evenbtus
+//            itemView.setOnClickListener {
+//                var url = Intent(Intent.ACTION_VIEW, Uri.parse(sourceTextView.text.toString()))
+//                startActivity(context, url, null)
             }
-        }
+
     }
 
-}
