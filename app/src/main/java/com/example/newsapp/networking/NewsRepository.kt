@@ -8,8 +8,10 @@ import retrofit2.Response
 
 class NewsRepository {
     private val newsApi: NewsApi?
+
     fun getNews(source: String?, key: String?): MutableLiveData<NewsResponse?> {
         val newsData = MutableLiveData<NewsResponse?>()
+
         newsApi!!.getNewsList(source, key).enqueue(object : Callback<NewsResponse?> {
             override fun onResponse(call: Call<NewsResponse?>,
                                     response: Response<NewsResponse?>) {

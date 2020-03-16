@@ -6,14 +6,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
 import com.example.newsapp.model.NewsArticle
 import com.example.newsapp.model.NewsResponse
 import com.example.newsapp.viewmodels.NewsViewModel
-import com.example.newsapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -21,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     var articleArrayList = ArrayList<NewsArticle?>()
     var newsAdapter: NewsAdapter? = null
     var newsViewModel: NewsViewModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
