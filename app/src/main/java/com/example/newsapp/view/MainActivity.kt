@@ -2,59 +2,56 @@ package com.example.newsapp.view
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Html
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newsapp.adapters.NewsAdapter
+import com.example.newsapp.model.NewsArticle
+import com.example.newsapp.model.NewsResponse
+import com.example.newsapp.viewmodels.NewsViewModel
 import com.example.newsapp.R
-import com.example.newsapp.model.newsapiresponse.NewsApiResponse
-import com.example.newsapp.model.repo.NewsRepo
-import com.example.newsapp.viewmodel.NewsApiViewModel
-import com.example.newsapp.viewmodel.vFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
-    private var dataSource = NewsRepo()
-    private lateinit var viewModel: NewsApiViewModel
-    private lateinit var adapter: NewsFeedViewAdapter
-
+    var articleArrayList = ArrayList<NewsArticle?>()
+    var newsAdapter: NewsAdapter? = null
+    var newsViewModel: NewsViewModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setupViewModel()
         setupRecyclerView()
 
         textView.setOnClickListener {
-            val website: String = "https://newsapi.org/"
-
-            var url = Intent(Intent.ACTION_VIEW, Uri.parse(website))
+            val website = "https://newsapi.org"
+            val url = Intent(Intent.ACTION_VIEW, Uri.parse(website))
             startActivity(url)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadNews()
-        setupRecyclerView()
-    }
     private fun setupViewModel(){
-       viewModel = ViewModelProvider(this, vFactory.provideViewModelFactory()).get(NewsApiViewModel::class.java)
-        viewModel.loadNews()
-        viewModel.getNewsRepo().observe(this, renderNews)
-
+        newsViewModel =  ViewModelProvider(this).get(NewsViewModel::class.java)
+        newsViewModel!!.init()
+        newsViewModel!!.getNewsRepository()!!.observe(this, Observer { newsResponse: NewsResponse? ->
+            val newsArticles = newsResponse?.articles
+            articleArrayList.addAll(newsArticles!!)
+            newsAdapter!!.notifyDataSetChanged()
+        })
     }
-    private val renderNews = Observer<NewsApiResponse> { adapter.updateResponse(it) }
 
-    fun setupRecyclerView(){
-        if (viewModel.newsFeed.value != null) {
-            adapter = NewsFeedViewAdapter(viewModel.getNewsRepo().value!!)
-            newsFeedView.layoutManager = LinearLayoutManager(this)
-            newsFeedView.adapter = adapter
+    private fun setupRecyclerView() {
+        if (newsAdapter == null) {
+            newsAdapter = NewsAdapter(this@MainActivity, articleArrayList)
         }
-    }
+        newsFeedView.layoutManager = LinearLayoutManager(this)
+        newsFeedView.addItemDecoration(DividerItemDecoration(this,
+            LinearLayoutManager.VERTICAL))
+        newsFeedView.adapter = newsAdapter
 
+    }
 }
